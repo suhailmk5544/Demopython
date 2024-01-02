@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        WELCOME TO LULU STORE WHERE YOU CAN BUYS DIFFRENT ITEMS...
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }}- LULU store
+    {% else %}
+        See our new collections
+    {% endif %}
+{% endblock %}
+{% block content %}
+
+{% if category %}
+    <div class="">
+        <div>
+            <p><a href="{% url 'ecommerce_app:allProdCat' %}">Our product collections</a></p>
+        </div>
+    </div>
+    {% endif %}
+<div style=" card text-align-last: center;">
+    {% if category %}
+    <h1 style="text-transform: uppercase;">{{category.name}}</h1><br>
+    <p>{{category.description}}</p>
+    <img src="{{category.image.url}}" style="height:250px;width:250px;" alt="{{category.name}}">
+</div>
+
+    {% else %}
+<div>
+<img src="{% static 'img/banner.png' %}" alt="our products">
+    </div>
+<br>
+<div>
+    <h1>Our product collections</h1>
+    <p>hese cases, the browser may replace the image with the text in the element's alt attribute. For these reasons and others, provide a useful value for alt whenever possible.
+        indicates that this image is not a key part of the content (it's decoration or a tracking pixel), and that non-visual browsers may omit it from rendering</p>
+</div>
+
+    {% endif %}
+<div class="container mt-5">
+        <div class="row mx-auto">
+ {% for products in products.object_list %}
+<div class="col-md-4" style="width: 300px;height: 300px;">
+        <a href="{{products.get_url}}"><img src="{{products.image.url}}" style="height: 180px;width:200px;" class="card-img-top" alt="{{products.name}}"></a>
+
+         <h5 class="card-title" style="letter-spacing: 1px;">{{products.name}}</h5>
+            <p class="card-text">${{products.price}}</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+
+<hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}" >{{pg}}</a>
+            {% endfor %}
+        </div>
+  {% endif %}
+    </div>
+    <br>
+    </div>
+
+
+{% endblock %}
